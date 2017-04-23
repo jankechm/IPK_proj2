@@ -1,7 +1,7 @@
 /**
  * File:        ipk-client.cpp
  * Author:      Marek Jankech
- * Dátum:       23.4.2017
+ * Date:        23.4.2017
  * Project:     Client for the computation of mathematic operations
  * Description: The client connects to the server, receives a mathematic task,
  *              solves it and sends the solution to the server
@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
     }
   }
   close(clientSocket);
+  return EXIT_SUCCESS;
 }
 
 /**

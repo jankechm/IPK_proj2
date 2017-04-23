@@ -25,6 +25,8 @@ If the client is unable to solve the mathematic task (dividing by zero, overflow
 The server can continue by another SOLVE message, or by the message BYE \fIsecret\fR\\n.
 The client writes out the value of \fIsecret\fR to the stdout and closes the connection.
 If the secret is in format UNKNOWN, it means, that the server was unable to identify the entered login sent in HELLO messsage.
+.SH RETURN VALUE
+On success, the program returns EXIT_SUCCESS. If an error occurs, the program returns EXIT_FAILURE.
 .SH EXAMPLES
 Connecting to a public server:
 .PP
