@@ -210,6 +210,7 @@ int evaluate(vector<string> arr, long double *result) {
       *result = operand1 * operand2;
       break;
     case '/':
+      //Test dividing by zero
       if (operand2 == 0) {
         return -1;
       }
