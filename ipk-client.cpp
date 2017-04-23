@@ -32,7 +32,7 @@ using namespace std;
 /**
  *Global constants
  */
-string login = "xjanke01";
+const string login = "xjanke01";
 const char *serverPort = "55555";
 const char *solveRegex = "\n? *SOLVE ([+-]?[0-9]+ [+-\\*\\/] [+-]?[0-9]+)\n";
 const char *byeRegex = "\n? *BYE ([^\n]*)\n";
@@ -87,48 +87,38 @@ int main(int argc, char *argv[])
   //Free addrinfo structure
   freeaddrinfo(result);
   //Send HELLO message
-  //loginHash ;
   msg = "HELLO " + loginHash + "\n";
   if ((send(clientSocket, msg.c_str(), msg.size(), 0)) == -1) {
     errTerminate("send");
   }
+  //Communicate with the server
   while(1) {
     bytesrx = recv(clientSocket, buffer, BUFSIZE, 0);
     if (bytesrx == -1) {
       errTerminate("recv");
     }
     else {
+      //Terminate string with '\0'
       buffer[bytesrx] = '\0';
+      //BYE message from the server - print the secret and close connection
       if (match(byeRegex, buffer, secret)) {
         cout << secret;
         break;
       }
+      //SOLVE message from the server - answer it
       else if (match(solveRegex, buffer, exercise)) {
         arr = tokenize(exercise);
+        //The client cannot solve the task - sending ERROR
         if ((evaluate(arr, &solution)) == -1) {
           msg = "RESULT ERROR\n";
         }
+        //The client can solve the task - sending solution
         else {
           msg = "RESULT " + lDouble2Str(solution) + "\n";
         }
-
-        cout << exercise << "\n";
-        cout << msg << "\n";
-        /*for (unsigned int i = 0; i < arr.size(); i++) {
-          cout << arr[i] << "\n";
-        }
-        cout << msg;
-        long double cudo;
-        vector<string> pole;
-        pole.push_back("19");
-        pole.push_back("/");
-        pole.push_back("-17");
-        for (unsigned int i = 0; i < pole.size(); i++) {
-          cout << pole[i] << "\n";
-        }
-        evaluate(pole, &cudo);
-        printf("Vysledok: %.2Lf\n", cudo);*/
-
+        //cout << exercise << "\n";
+        //cout << msg << "\n";
+        //Sending response to the server
         if ((send(clientSocket, msg.c_str(), msg.size(), 0)) == -1) {
           close(clientSocket);
           errTerminate("send");
@@ -158,11 +148,13 @@ bool match(const char *pattern, char *haystack, string &matched) {
   int status;
   char buf[BUFSIZE];
 
+  //Compile regex
   if ((status = regcomp(&regexp, pattern, REG_EXTENDED)) != 0) {
     regerror(status, &regexp, buf, BUFSIZE);
     printf("error = %s\n", buf);
     errTerminate("regcomp");
   }
+  //Execute the regex for the string
   if ((regexec(&regexp, haystack, nmatch, pmatch, 0)) == 0) {
     match = true;
     matched = ((string)haystack).substr(pmatch[1].rm_so, pmatch[1].rm_eo - pmatch[1].rm_so);
@@ -237,6 +229,5 @@ string lDouble2Str(long double number) {
   ostringstream ostrs;
   ostrs.precision(2);
   ostrs << fixed << number;
-  //ostrs << setprecision(2) << fixed << number;
   return ostrs.str();
 }
