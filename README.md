@@ -6,7 +6,7 @@ The client connects to a server, receives mathematic task, solves it and sends b
 
     ipk-client hostname
 
-[hostname][dill] can be valid IPv4 or IPv6 address or a domain name of the server.
+*hostname* can be valid IPv4 or IPv6 address or a domain name of the server.
 
 ## Description
 
