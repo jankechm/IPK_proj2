@@ -1,0 +1,14 @@
+
+*.tgz
+
+*.layout
+
+*.stackdump
+
+*.depend
+
+*.cbp
+
+*.o
+
+*.exe
